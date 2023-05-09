@@ -1,0 +1,12 @@
+import 'package:flutter/material.dart';
+
+class DataUpdate extends StatelessWidget {
+  static const routName = 'Hello';
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: Center(
+      child: Text('you are hero'),
+    ));
+  }
+}

@@ -1,0 +1,150 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import '../screen/newpage.dart';
+
+class NewTransaction extends StatefulWidget {
+  final Function addTx;
+
+  NewTransaction(
+    this.addTx,
+  );
+
+  @override
+  State<NewTransaction> createState() => _NewTransactionState();
+}
+
+class _NewTransactionState extends State<NewTransaction> {
+  final _titleController = TextEditingController();
+
+  final _amountController = TextEditingController();
+
+  DateTime selecttime = DateTime.now();
+
+  void onSubimited() {
+    final inputTitle = _titleController.text;
+    final inputamount = double.parse(_amountController.text);
+
+    if (inputTitle.isEmpty && inputamount < 0) {
+      return;
+    }
+
+    widget.addTx(
+      inputTitle,
+      inputamount,
+      selecttime,
+    );
+    Navigator.of(context).pop();
+  }
+
+  void selectedTime() {
+    DateTime _selectTime;
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015),
+      lastDate: DateTime(2025),
+    ).then((value) {
+      setState(() {
+        selecttime = value!;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.only(
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: 5,
+                right: 5,
+                top: 5,
+                bottom: 5,
+              ),
+              child: Container(
+                margin: const EdgeInsets.all(5),
+                child: TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    contentPadding: EdgeInsets.only(
+                      left: 10,
+                    ),
+
+                    // border: OutlineInputBorder(),
+                  ),
+                  controller: _titleController,
+                  onSubmitted: (_) => onSubimited(),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5),
+              child: Container(
+                margin: EdgeInsets.all(5),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    labelText: 'Amount',
+                    contentPadding: EdgeInsets.only(left: 15),
+                  ),
+                  controller: _amountController,
+                  onSubmitted: (_) => onSubimited(),
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 15),
+                  child: Container(
+                    child: Text(
+                      DateFormat.yMEd().format(selecttime),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.purple,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(right: 15),
+                  child: TextButton(
+                      onPressed: selectedTime,
+                      child: Text(
+                        'choos date',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom()),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: onSubimited,
+                  child: const Text('Add to List'),
+                ),
+              ],
+            ),
+          ]),
+        ),
+      ),
+    );
+  }
+}
